@@ -4,11 +4,14 @@ import logoRocketseatIcon from "../../assets/logo-rocketseat.png";
 export const Footer = () => {
   return (
     <Flex
-      bg="black"
+      as="footer"
+      bg="gray.900"
       w="100%"
       alignItems="center"
       justifyContent="space-between"
       p="5"
+      borderTop="1px solid"
+      borderTopColor="gray.800"
     >
       <Box display="flex" alignItems="center" gap="20px">
         <Image src={logoRocketseatIcon} alt="Logo Rocketseat" />

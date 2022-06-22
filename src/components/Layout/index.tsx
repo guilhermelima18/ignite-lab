@@ -7,7 +7,7 @@ type LayoutProps = {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <Flex w="100%" maxW="1200px" flexDir="column" mx="auto">
+    <Flex w="100%" maxW="1440px" flexDir="column" mx="auto">
       {children}
     </Flex>
   );

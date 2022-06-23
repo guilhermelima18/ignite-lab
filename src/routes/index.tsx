@@ -1,12 +1,13 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
+import Event from "../pages/Event";
 import Login from "../pages/Login";
 
 export const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/event" element={<Event />} />
+      <Route path="/event/lesson/:slug" element={<Event />} />
     </Routes>
   );
 };

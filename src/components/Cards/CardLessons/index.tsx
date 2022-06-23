@@ -16,6 +16,7 @@ export const CardLessons = ({
   lessonType,
   title,
   availableAt,
+  slug,
   isCurrent,
 }: CardLessonsProps) => {
   const isLessonAvailable = isPast(availableAt);
@@ -28,7 +29,7 @@ export const CardLessons = ({
   );
 
   return (
-    <Link to="/">
+    <Link to={`/event/lesson/${slug}`}>
       <Box
         w="100%"
         display="flex"

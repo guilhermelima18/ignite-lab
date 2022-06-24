@@ -24,7 +24,11 @@ interface GetLessonsResponse {
   }[];
 }
 
-export const Sidebar = () => {
+type SidebarProps = {
+  isCurrentSlug?: string;
+};
+
+export const Sidebar = ({ isCurrentSlug }: SidebarProps) => {
   const { data } = useQuery<GetLessonsResponse>(GET_LESSONS_QUERY);
 
   return (
@@ -33,7 +37,7 @@ export const Sidebar = () => {
       bg="gray.700"
       w="30%"
       maxW="400px"
-      h="100vh"
+      minH="100vh"
       flexDir="column"
       px="3"
       overflowY="auto"
@@ -71,6 +75,7 @@ export const Sidebar = () => {
           title={lesson.title}
           slug={lesson.slug}
           availableAt={new Date(lesson.availableAt)}
+          isCurrentSlug={isCurrentSlug}
         />
       ))}
     </Flex>

@@ -1,12 +1,46 @@
+import { useNavigate } from "react-router-dom";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { gql, useMutation } from "@apollo/client";
 import { Layout } from "../../components/Layout";
 import { RegistrationForm } from "../../components/RegistrationForm";
+import { subscribeFormValidation } from "../../validations/SubscribeForm";
+import { FormSubscribeProps } from "../../types/SubscribeForm";
 import igniteLabIcon from "../../assets/logo-ignitelab.png";
 import blurImage from "../../assets/blur.svg";
 import reactIcon from "../../assets/reactjs.png";
 import imageBackground from "../../assets/image-background.svg";
 
+const CREATE_SUBSCRIBER_MUTATION = gql`
+  mutation CreateSubscriber($name: String!, $email: String!) {
+    createSubscriber(data: { name: $name, email: $email }) {
+      id
+    }
+  }
+`;
+
 export default function Login() {
+  const navigate = useNavigate();
+  const [createSubscriber] = useMutation(CREATE_SUBSCRIBER_MUTATION);
+  const methods = useForm<FormSubscribeProps>({
+    resolver: yupResolver(subscribeFormValidation),
+  });
+
+  const handleSubscribeFormSubmit: SubmitHandler<FormSubscribeProps> = async (
+    data: FormSubscribeProps
+  ) => {
+    await createSubscriber({
+      variables: {
+        name: data.name,
+        email: data.email,
+      },
+    });
+
+    methods.reset();
+    navigate("/event");
+  };
+
   return (
     <Flex
       bgImage={`url(${blurImage})`}
@@ -37,7 +71,12 @@ export default function Login() {
                 <Image w="200px" src={igniteLabIcon} alt="Logo Ignite Lab" />
               </Box>
               <Box w="100%" display="flex" flexDir="column" mt="5">
-                <Text color="white" fontSize="2.1rem" fontWeight="normal">
+                <Text
+                  color="white"
+                  fontSize="2.1rem"
+                  fontWeight="normal"
+                  lineHeight="46px"
+                >
                   Construa uma{" "}
                   <Text as="span" color="blue.300" fontWeight="bold">
                     aplicação completa
@@ -59,11 +98,21 @@ export default function Login() {
               </Box>
             </Flex>
             <Flex w="50%" alignItems="center" justifyContent="flex-end">
-              <RegistrationForm />
+              <FormProvider {...methods}>
+                <form
+                  onSubmit={methods.handleSubmit(handleSubscribeFormSubmit)}
+                  style={{
+                    width: "100%",
+                    maxWidth: "350px",
+                  }}
+                >
+                  <RegistrationForm />
+                </form>
+              </FormProvider>
             </Flex>
           </Box>
 
-          <Box w="100%">
+          <Box w="100%" display="flex" justifyContent="center">
             <Image w="100%" src={imageBackground} alt="Imagem de Fundo" />
           </Box>
         </Layout>

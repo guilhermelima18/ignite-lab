@@ -15,6 +15,7 @@ interface GetLessonBySlugResponse {
     title: string;
     id: string;
     description: string;
+    slug: string;
     videoId: string;
     teacher: {
       bio: string;
@@ -30,6 +31,7 @@ const GET_LESSON_BY_SLUG = gql`
       title
       id
       description
+      slug
       videoId
       teacher {
         name
@@ -42,11 +44,14 @@ const GET_LESSON_BY_SLUG = gql`
 
 export default function Event() {
   const { slug } = useParams();
-  const { data } = useQuery<GetLessonBySlugResponse>(GET_LESSON_BY_SLUG, {
-    variables: {
-      slug,
-    },
-  });
+  const { data, loading } = useQuery<GetLessonBySlugResponse>(
+    GET_LESSON_BY_SLUG,
+    {
+      variables: {
+        slug,
+      },
+    }
+  );
 
   if (!data) return null;
 
@@ -54,48 +59,47 @@ export default function Event() {
     <>
       <Header />
       <Layout>
-        <Flex as="main" bg="#09090A" w="100%" justifyContent="space-between">
-          {slug ? (
-            <>
-              <Box as="section" w="70%" display="flex" flexDir="column">
-                <BoxVideo videoId={data.lesson.videoId} />
-                <VideoInfo
-                  title={data.lesson.title}
-                  description={data.lesson.description}
+        <Flex
+          as="main"
+          bg="#09090A"
+          w="100%"
+          justifyContent={slug ? "space-between" : "flex-end"}
+          mb="5"
+        >
+          {slug && (
+            <Box as="section" w="70%" display="flex" flexDir="column">
+              <BoxVideo videoId={data.lesson.videoId} />
+              <VideoInfo
+                title={data.lesson.title}
+                description={data.lesson.description}
+              />
+              <Avatar
+                imageUrl={data.lesson.teacher.avatarURL}
+                teacherName={data.lesson.teacher.name}
+                teacherBio={data.lesson.teacher.bio}
+              />
+              <Box
+                w="100%"
+                display="flex"
+                alignItems="center"
+                gap="10px"
+                mt="5"
+                px="5"
+              >
+                <CardInfo
+                  title="Material complementar"
+                  info="Acesse o material complementar para acelerar o seu desenvolvimento"
+                  icon={<FileArrowDown size={30} color="white" />}
                 />
-                <Avatar
-                  imageUrl={data.lesson.teacher.avatarURL}
-                  teacherName={data.lesson.teacher.name}
-                  teacherBio={data.lesson.teacher.bio}
+                <CardInfo
+                  title="Wallpapers exclusivos"
+                  info="Baixe wallpapers exclusivos do Ignite Lab e personalize a sua máquina"
+                  icon={<Image size={30} color="white" />}
                 />
-                <Box
-                  w="100%"
-                  display="flex"
-                  alignItems="center"
-                  gap="10px"
-                  mt="5"
-                  px="5"
-                >
-                  <CardInfo
-                    title="Material complementar"
-                    info="Acesse o material complementar para acelerar o seu desenvolvimento"
-                    icon={<FileArrowDown size={30} color="white" />}
-                  />
-                  <CardInfo
-                    title="Wallpapers exclusivos"
-                    info="Baixe wallpapers exclusivos do Ignite Lab e personalize a sua máquina"
-                    icon={<Image size={30} color="white" />}
-                  />
-                </Box>
               </Box>
-              <Sidebar />
-            </>
-          ) : (
-            <>
-              <Box as="section" w="70%" display="flex" flexDir="column"></Box>
-              <Sidebar />
-            </>
+            </Box>
           )}
+          <Sidebar isCurrentSlug={data?.lesson?.slug} />
         </Flex>
       </Layout>
     </>

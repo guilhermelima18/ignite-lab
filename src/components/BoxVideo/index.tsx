@@ -9,7 +9,7 @@ type BoxVideoProps = {
 export const BoxVideo = ({ videoId }: BoxVideoProps) => {
   return (
     <AspectRatio ratio={16 / 9}>
-      <Box bg="gray.800" w="100%" maxW="1100px" h="100%" maxH="60vh">
+      <Box w="100%" maxW="1100px" h="100%">
         <Player style={{ width: "100%" }}>
           <Youtube videoId={videoId} />
           <DefaultUi />

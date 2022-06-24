@@ -9,7 +9,7 @@ type CardLessonsProps = {
   lessonType: "live" | "class";
   slug: string;
   title: string;
-  isCurrent?: boolean;
+  isCurrentSlug?: string;
 };
 
 export const CardLessons = ({
@@ -17,7 +17,7 @@ export const CardLessons = ({
   title,
   availableAt,
   slug,
-  isCurrent,
+  isCurrentSlug,
 }: CardLessonsProps) => {
   const isLessonAvailable = isPast(availableAt);
   const availableDateFormatted = format(
@@ -27,6 +27,8 @@ export const CardLessons = ({
       locale: ptBR,
     }
   );
+
+  const isCurrentLesson = isCurrentSlug === slug;
 
   return (
     <Link to={`/event/lesson/${slug}`}>
@@ -41,9 +43,9 @@ export const CardLessons = ({
           {availableDateFormatted}
         </Text>
         <Box
-          bg={isCurrent ? "green.500" : ""}
+          bg={isCurrentLesson ? "green.500" : ""}
           w="100%"
-          h="90px"
+          h="95px"
           display="flex"
           flexDir="column"
           justifyContent="space-between"
@@ -52,13 +54,14 @@ export const CardLessons = ({
           p="3"
           borderRadius="md"
           position="relative"
+          _hover={{ border: "1px solid", borderColor: "green.500" }}
         >
           <Text
             fontSize="0.7rem"
             color={
-              isCurrent
+              isCurrentLesson
                 ? "white"
-                : !isCurrent && lessonType === "live"
+                : !isCurrentLesson && lessonType === "live"
                 ? "green.500"
                 : "white"
             }
@@ -66,7 +69,7 @@ export const CardLessons = ({
             top="10px"
             right="10px"
             border="1px solid"
-            borderColor={isCurrent ? "white" : "green.500"}
+            borderColor={isCurrentLesson ? "white" : "green.500"}
             borderRadius="md"
             px="2"
             py="1"
@@ -75,9 +78,9 @@ export const CardLessons = ({
           </Text>
           <Text
             color={
-              isCurrent
+              isCurrentLesson
                 ? "white"
-                : !isCurrent && isLessonAvailable
+                : !isCurrentLesson && isLessonAvailable
                 ? "cyan.400"
                 : "orange.400"
             }
@@ -98,7 +101,7 @@ export const CardLessons = ({
               </>
             )}
           </Text>
-          <Text color="gray.200" fontSize="0.9rem">
+          <Text color="gray.200" fontSize="0.8rem">
             {title}
           </Text>
         </Box>

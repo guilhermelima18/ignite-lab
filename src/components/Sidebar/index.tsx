@@ -38,7 +38,7 @@ export const Sidebar = ({ isCurrentSlug, isDrawer }: SidebarProps) => {
       bg="gray.700"
       w={isDrawer ? "100%" : "30%"}
       maxW="400px"
-      maxH="700px"
+      minH="100vh"
       flexDir="column"
       px="3"
       overflowY="auto"

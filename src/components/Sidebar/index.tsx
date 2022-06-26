@@ -26,18 +26,19 @@ interface GetLessonsResponse {
 
 type SidebarProps = {
   isCurrentSlug?: string;
+  isDrawer?: boolean;
 };
 
-export const Sidebar = ({ isCurrentSlug }: SidebarProps) => {
+export const Sidebar = ({ isCurrentSlug, isDrawer }: SidebarProps) => {
   const { data } = useQuery<GetLessonsResponse>(GET_LESSONS_QUERY);
 
   return (
     <Flex
       as="aside"
       bg="gray.700"
-      w="30%"
+      w={isDrawer ? "100%" : "30%"}
       maxW="400px"
-      minH="100vh"
+      maxH="700px"
       flexDir="column"
       px="3"
       overflowY="auto"

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Text, useMediaQuery } from "@chakra-ui/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { gql, useMutation } from "@apollo/client";
@@ -21,6 +21,7 @@ const CREATE_SUBSCRIBER_MUTATION = gql`
 `;
 
 export default function Login() {
+  const [isLessThan790] = useMediaQuery("(max-width: 790px)");
   const navigate = useNavigate();
   const [createSubscriber] = useMutation(CREATE_SUBSCRIBER_MUTATION);
   const methods = useForm<FormSubscribeProps>({
@@ -63,19 +64,25 @@ export default function Login() {
             w="100%"
             minH="300px"
             display="flex"
+            flexDir={isLessThan790 ? "column" : "row"}
             justifyContent="space-between"
             mt="10"
           >
-            <Flex w="50%" flexDir="column" justifyContent="center">
+            <Flex
+              w={isLessThan790 ? "100%" : "50%"}
+              flexDir="column"
+              justifyContent="center"
+              mb={isLessThan790 ? "10" : "0"}
+            >
               <Box w="100%" display="flex" flexDir="column">
                 <Image w="200px" src={igniteLabIcon} alt="Logo Ignite Lab" />
               </Box>
               <Box w="100%" display="flex" flexDir="column" mt="5">
                 <Text
                   color="white"
-                  fontSize="2.1rem"
+                  fontSize={["1.2rem", "1.8rem", "2.1rem"]}
                   fontWeight="normal"
-                  lineHeight="46px"
+                  lineHeight={["34px", "42px", "46px"]}
                 >
                   Construa uma{" "}
                   <Text as="span" color="blue.300" fontWeight="bold">
@@ -88,7 +95,7 @@ export default function Login() {
                 </Text>
               </Box>
               <Box w="100%" display="flex" flexDir="column" mt="5">
-                <Text fontSize="0.9rem" color="gray.400">
+                <Text fontSize={["0.8rem", "0.9rem"]} color="gray.400">
                   Em apenas uma semana você vai dominar na prática uma das
                   tecnologias mais
                   <br />
@@ -97,7 +104,11 @@ export default function Login() {
                 </Text>
               </Box>
             </Flex>
-            <Flex w="50%" alignItems="center" justifyContent="flex-end">
+            <Flex
+              w={isLessThan790 ? "100%" : "50%"}
+              alignItems="center"
+              justifyContent={isLessThan790 ? "center" : "flex-end"}
+            >
               <FormProvider {...methods}>
                 <form
                   onSubmit={methods.handleSubmit(handleSubscribeFormSubmit)}

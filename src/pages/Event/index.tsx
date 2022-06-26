@@ -1,6 +1,19 @@
 import { useParams } from "react-router-dom";
-import { Box, Flex } from "@chakra-ui/react";
-import { FileArrowDown, Image } from "phosphor-react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  useDisclosure,
+  useMediaQuery,
+} from "@chakra-ui/react";
+import {
+  ArrowFatRight,
+  FileArrowDown,
+  Image,
+  List,
+  RocketLaunch,
+} from "phosphor-react";
 import { gql, useQuery } from "@apollo/client";
 import { Avatar } from "../../components/Avatar";
 import { CardInfo } from "../../components/Cards/CardInfo";
@@ -9,6 +22,8 @@ import { Layout } from "../../components/Layout";
 import { Sidebar } from "../../components/Sidebar";
 import { BoxVideo } from "../../components/BoxVideo";
 import { VideoInfo } from "../../components/VideoInfo";
+import { Button } from "../../components/Button";
+import { DrawerSidebar } from "../../components/DrawerSidebar";
 
 interface GetLessonBySlugResponse {
   lesson: {
@@ -43,6 +58,8 @@ const GET_LESSON_BY_SLUG = gql`
 `;
 
 export default function Event() {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [isLessThan1000] = useMediaQuery("(max-width: 1000px)");
   const { slug } = useParams();
   const { data, loading } = useQuery<GetLessonBySlugResponse>(
     GET_LESSON_BY_SLUG,
@@ -66,8 +83,18 @@ export default function Event() {
           justifyContent={slug ? "space-between" : "flex-end"}
           mb="5"
         >
-          {slug && (
-            <Box as="section" w="70%" display="flex" flexDir="column">
+          {slug ? (
+            <Box
+              as="section"
+              w={isLessThan1000 ? "100%" : "70%"}
+              display="flex"
+              flexDir="column"
+            >
+              {isLessThan1000 && (
+                <Button bg="purple.500" w="50px" onClick={onOpen} my="5">
+                  <List size={24} weight="fill" color="white" />
+                </Button>
+              )}
               <BoxVideo videoId={data.lesson.videoId} />
               <VideoInfo
                 title={data.lesson.title}
@@ -81,7 +108,8 @@ export default function Event() {
               <Box
                 w="100%"
                 display="flex"
-                alignItems="center"
+                flexDir={isLessThan1000 ? "column" : "row"}
+                alignItems={isLessThan1000 ? "flex-start" : "center"}
                 gap="10px"
                 mt="5"
                 px="5"
@@ -98,10 +126,72 @@ export default function Event() {
                 />
               </Box>
             </Box>
+          ) : (
+            <Box
+              as="section"
+              w={isLessThan1000 ? "100%" : "70%"}
+              minH={isLessThan1000 ? "70vh" : ""}
+              display="flex"
+              flexDir="column"
+              /* alignItems="center" */
+              justifyContent="center"
+              position="relative"
+            >
+              {isLessThan1000 && (
+                <Button
+                  bg="purple.500"
+                  size="sm"
+                  onClick={onOpen}
+                  mt="5"
+                  position="absolute"
+                  top="0"
+                  right="0"
+                >
+                  <List size={24} weight="fill" color="white" />
+                </Button>
+              )}
+              <RocketLaunch color="#805AD5" size={50} weight="fill" />
+              <Heading
+                color="white"
+                fontSize={["1.5rem", "2.3rem", "3rem"]}
+                mt="10"
+              >
+                Acelere cada etapa da sua
+                <br />
+                carreira em programação
+              </Heading>
+              <Text
+                bg="purple.500"
+                w="280px"
+                h="50px"
+                color="white"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                borderRadius="md"
+                gap="10px"
+                mt="10"
+                transition="500ms"
+                _hover={{
+                  backgroundColor: "purple.700",
+                  transform: "scale(1.1)",
+                }}
+              >
+                Selecione uma aula ao lado
+                <ArrowFatRight size={25} weight="fill" />
+              </Text>
+            </Box>
           )}
-          <Sidebar isCurrentSlug={data?.lesson?.slug} />
+          {!isLessThan1000 && <Sidebar isCurrentSlug={data?.lesson?.slug} />}
         </Flex>
       </Layout>
+      {isOpen && (
+        <DrawerSidebar
+          isOpen={isOpen}
+          onClose={onClose}
+          isCurrentSlug={data?.lesson?.slug}
+        />
+      )}
     </>
   );
 }
